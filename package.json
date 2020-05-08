@@ -1,0 +1,33 @@
+{
+  "name": "DAVID-19-API",
+  "author": "Sergio Ceron Figueroa",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node --experimental-modules app.js",
+    "mongo": "mongod --dbpath=./mongo",
+    "stats": "node --experimental-modukes stats.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parser": "^2.3.2",
+    "ethereumjs-tx": "^2.1.2",
+    "express": "^4.17.1",
+    "js-sha3": "^0.8.0",
+    "json2csv": "^5.0.0",
+    "moment": "^2.24.0",
+    "mongoose": "^5.9.9",
+    "ngeohash": "^0.6.3",
+    "request": "^2.88.2",
+    "socket.io": "^2.3.0",
+    "truffle-hdwallet-provider": "^1.0.17",
+    "web3": "^1.2.6"
+  },
+  "devDependencies": {
+    "@openzeppelin/upgrades": "^2.8.0",
+    "@openzeppelin/contract-loader": "^0.6.1",
+    "chai": "^4.2.0",
+    "ganache-cli": "^6.4.3",
+    "@truffle/hdwallet-provider": "^1.0.34"
+  }
+}
