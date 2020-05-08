@@ -17,13 +17,13 @@ app.get( '/', async( req, res ) => {
 
 app.post( '/ages', async( req, res ) => {
 	const { status, filter } = req.body;
-	const ranges = await dao.getAgeRanges( parseInt( status ) );
+	const ranges = await dao.getAgeRanges( parseInt( status ), filter );
 	res.status( 200 ).send( ranges );
 } );
 
 app.post( '/map', async( req, res ) => {
-	const { box, zoom } = req.body;
-	const clusters = await dao.getClusters( box, Zoom[zoom] );
+	const { box, zoom, filter } = req.body;
+	const clusters = await dao.getClusters( box, Zoom[zoom], filter );
 	res.status( 200 ).send( clusters );
 } );
 

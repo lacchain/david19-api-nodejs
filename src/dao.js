@@ -61,12 +61,12 @@ export default class MongoDAO {
 		return this.models[model].findOne( { uid } );
 	}
 
-	getClusters( box, factor ) {
-		return this.models['user'].aggregate( getPipeline( box, factor ) );
+	getClusters( box, factor, filter ) {
+		return this.models['user'].aggregate( getPipeline( box, factor, filter ) );
 	}
 
-	getAgeRanges( status ) {
-		return this.models['user'].aggregate( getAgeRanges( status ) );
+	getAgeRanges( status, filter ) {
+		return this.models['user'].aggregate( getAgeRanges( status, filter ) );
 	}
 
 	getCountryRanking() {

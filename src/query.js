@@ -1,13 +1,18 @@
-export const getPipeline = ( box, factor ) => {
-	const filter = {
+export const getPipeline = ( box, factor, filter ) => {
+	let matcher = {
 		$match: {
-			location: {
-				$geoWithin: {
-					$box: box
-				}
-			}
+			$and: []
 		}
 	};
+	if( box ) matcher['$match']['$and'].push( {
+		location: {
+			$geoWithin: {
+				$box: box
+			}
+		}
+	} );
+	if( filter.country ) matcher['$match']['$and'].push( { country: filter.country } );
+	if( filter.state ) matcher['$match']['$and'].push( { region: filter.state } );
 	const cluster = {
 		$project: {
 			_id: 0,
@@ -80,18 +85,23 @@ export const getPipeline = ( box, factor ) => {
 		}
 	}
 	let pipeline = [];
-	if( box ) pipeline.push( filter );
+	if( matcher['$match']['$and'].length > 0 ) pipeline.push( matcher );
 	pipeline.push( cluster );
 	pipeline.push( group );
 	return pipeline;
 }
 
-export const getAgeRanges = ( status = 3 ) => {
-	return [{
+export const getAgeRanges = ( status = 3, filter ) => {
+	let matcher = {
 		$match: {
-			status
+			$and: [{
+				status
+			}]
 		}
-	}, {
+	};
+	if( filter.country ) matcher['$match']['$and'].push( { country: filter.country } );
+	if( filter.state ) matcher['$match']['$and'].push( { region: filter.state } );
+	const group = {
 		$group: {
 			_id: {
 				$switch: {
@@ -131,7 +141,7 @@ export const getAgeRanges = ( status = 3 ) => {
 						{
 							case: {
 								$gte: ["$age", 66]
-							}, then: "65+"
+							}, then: "66-200"
 						}
 					]
 				}
@@ -142,7 +152,8 @@ export const getAgeRanges = ( status = 3 ) => {
 			unspecifiedCount: { $sum: { $cond: { if: { $eq: ["$gender", 2] }, then: 1, else: 0 } } },
 			otherCount: { $sum: { $cond: { if: { $eq: ["$gender", 3] }, then: 1, else: 0 } } },
 		}
-	}]
+	};
+	return [matcher, group]
 }
 
 export const getCountryRank = () => {
