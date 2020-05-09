@@ -15,6 +15,16 @@ app.get( '/', async( req, res ) => {
 	res.status( 200 ).send( await dao.getCountryRanking() );
 } );
 
+app.post( '/eventeum/event', async( req, res ) => {
+	console.log( JSON.stringify( req.body ) );
+	res.status( 200 ).send( {} );
+} );
+
+app.post( '/eventeum/block', async( req, res ) => {
+	console.log( JSON.stringify( req.body ) );
+	res.status( 200 ).send( {} );
+} );
+
 app.post( '/ages', async( req, res ) => {
 	const { status, filter } = req.body;
 	const ranges = await dao.getAgeRanges( parseInt( status ), filter );
