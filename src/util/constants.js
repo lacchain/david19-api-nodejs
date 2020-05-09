@@ -1,3 +1,5 @@
+import utf8 from "utf8";
+
 export const Symptoms = {
 	Fever: 0b0000001,
 	Cough: 0b0000010,
@@ -47,16 +49,22 @@ export const Zoom = {
 	20: 6
 }
 
-export const hexToAscii = ( hex ) => {
+export const hexToAscii = function(hex) {
 	let str = "";
-	let i = 0, l = hex.length;
-	if( hex.substring( 0, 2 ) === '0x' ) {
-		i = 2;
-	}
-	for( ; i < l; i += 2 ) {
-		let code = parseInt( hex.substr( i, 2 ), 16 );
-		str += String.fromCharCode( code );
+	let code = 0;
+	hex = hex.replace(/^0x/i,'');
+
+	hex = hex.replace(/^(?:00)*/,'');
+	hex = hex.split("").reverse().join("");
+	hex = hex.replace(/^(?:00)*/,'');
+	hex = hex.split("").reverse().join("");
+
+	let l = hex.length;
+
+	for (let i=0; i < l; i+=2) {
+		code = parseInt(hex.substr(i, 2), 16);
+		str += String.fromCharCode(code);
 	}
 
-	return str;
-}
+	return utf8.decode(str);
+};
