@@ -10,6 +10,7 @@ export default class MongoDAO {
 
 		const userSchema = mongoose.Schema( userModel );
 		userSchema.index( { 'location': '2d' } );
+		userSchema.index( { 'geohash': 'hashed' } );
 
 		const countrySchema = mongoose.Schema( countryModel );
 		countrySchema.index( { 'geometry': '2dsphere' } );
