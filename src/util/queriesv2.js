@@ -1,34 +1,21 @@
-export const getPipeline = ( box, factor, filter ) => {
-	let matcher = {
-		$match: {
-			$and: []
-		}
-	};
-	if( box ) matcher['$match']['$and'].push( {
-		location: {
-			$geoWithin: {
-				$box: box
-			}
-		}
-	} );
-	if( filter.country ) matcher['$match']['$and'].push( { country: filter.country } );
-	if( filter.state ) matcher['$match']['$and'].push( { region: filter.state } );
-	const cluster = {
-		$project: {
-			_id: 0,
-			geo: {
-				"$substr": ["$geohash", 0, factor]
-			},
-			gender: 1,
-			confined: 1,
-			status: 1,
-			symptoms: 1,
-			location: 1
-		}
-	};
+export const getPipeline = ( box, factor, filters ) => {
+	// Stage 0 - Filter by country, state, gender or age (Optional)
+	let filter = { $match: { $and: [] } };
+	if( filters.country ) filter['$match']['$and'].push( { country: filters.country } );
+	if( filters.state ) filter['$match']['$and'].push( { region: filters.state } );
+	if( filters.gender ) filter['$match']['$and'].push( { gender: parseInt( filters.gender ) } );
+	if( filters.age ) {
+		const range = filters.age.split( ',' );
+		const min = parseInt( range[0] );
+		const max = parseInt( range[1] );
+		filter['$match']['$and'].push( { age: { $gte: min } } );
+		filter['$match']['$and'].push( { age: { $lte: max } } );
+	}
+
+	// Stage 1 - Group by geohash (Required)
 	const group = {
 		$group: {
-			_id: "$geo",
+			_id: "$geohash",
 			usersCount: {
 				$sum: 1
 			},
@@ -80,14 +67,113 @@ export const getPipeline = ( box, factor, filter ) => {
 			soreThroatCount: {
 				$sum: { $cond: { if: { $eq: ["$symptoms.soreThroat", true] }, then: 1, else: 0 } }
 			},
+			location: { $first: "$location" },
 			latAvg: { $avg: { $arrayElemAt: ["$location", 1] } },
 			lonAvg: { $avg: { $arrayElemAt: ["$location", 0] } }
 		}
 	}
+
+	// Stage 2 - Geospatial filter by box boundaries (Optional)
+	const limit = {
+		$match: {
+			location: {
+				$geoWithin: {
+					$box: box
+				}
+			}
+		}
+	};
+
+	// Stage 3 - Cluster by geoHash using a factor of precision (Optional)
+	const cluster = [{
+		$project: {
+			_id: 0,
+			geo: {
+				$substr: ["$_id", 0, factor]
+			},
+			usersCount: 1,
+			maleCount: 1,
+			femaleCount: 1,
+			unspecifiedCount: 1,
+			otherCount: 1,
+			confinedCount: 1,
+			healthyCount: 1,
+			withSymptomsCount: 1,
+			affectedCount: 1,
+			recoveredCount: 1,
+			feverCount: 1,
+			coughCount: 1,
+			breathingIssuesCount: 1,
+			lostSmellCount: 1,
+			headacheCount: 1,
+			musclePainCount: 1,
+			soreThroatCount: 1,
+			latAvg: 1,
+			lonAvg: 1
+		}
+	}, {
+		$group: {
+			_id: "$geo",
+			usersCount: {
+				$sum: "$usersCount"
+			},
+			maleCount: {
+				$sum: "$maleCount"
+			},
+			femaleCount: {
+				$sum: "femaleCount"
+			},
+			unspecifiedCount: {
+				$sum: "$unspecifiedCount"
+			},
+			otherCount: {
+				$sum: "$otherCount"
+			},
+			confinedCount: {
+				$sum: "$confinedCount"
+			},
+			healthyCount: {
+				$sum: "$healthyCount"
+			},
+			withSymptomsCount: {
+				$sum: "$withSymptomsCount"
+			},
+			affectedCount: {
+				$sum: "$affectedCount"
+			},
+			recoveredCount: {
+				$sum: "$recoveredCount"
+			},
+			feverCount: {
+				$sum: "$feverCount"
+			},
+			coughCount: {
+				$sum: "$coughCount"
+			},
+			breathingIssuesCount: {
+				$sum: "$breathingIssuesCount"
+			},
+			lostSmellCount: {
+				$sum: "$lostSmellCount"
+			},
+			headacheCount: {
+				$sum: "$headacheCount"
+			},
+			musclePainCount: {
+				$sum: "$musclePainCount"
+			},
+			soreThroatCount: {
+				$sum: "$soreThroatCount"
+			},
+			latAvg: { $avg: "$latAvg" },
+			lonAvg: { $avg: "$lonAvg" }
+		}
+	}]
 	let pipeline = [];
-	if( matcher['$match']['$and'].length > 0 ) pipeline.push( matcher );
-	pipeline.push( cluster );
+	if( filter['$match']['$and'].length > 0 ) pipeline.push( filter );
 	pipeline.push( group );
+	if( box ) pipeline.push( limit );
+	if( factor < 6 ) pipeline = pipeline.concat( cluster );
 	return pipeline;
 }
 
@@ -109,7 +195,7 @@ export const getAgeRanges = ( status = 3, filter ) => {
 						{
 							case: {
 								$and: [
-									{ $gte: ["$age", 0] },
+									{ $gte: ["$age", 13] },
 									{ $lte: ["$age", 17] }
 								]
 							}, then: "13_17"
@@ -141,9 +227,10 @@ export const getAgeRanges = ( status = 3, filter ) => {
 						{
 							case: {
 								$gte: ["$age", 66]
-							}, then: "66-200"
+							}, then: "66_200"
 						}
-					]
+					],
+					default: "0_13"
 				}
 			},
 			count: { $sum: 1 },

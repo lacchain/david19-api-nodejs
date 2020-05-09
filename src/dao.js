@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import countryModel from "./model/country.js";
 import userModel from "./model/user.js";
-import { getAgeRanges, getCountryRank, getPipeline } from "./util/queries.js";
+import { getAgeRanges, getCountryRank, getPipeline } from "./util/queriesv2.js";
 
 export default class MongoDAO {
 
