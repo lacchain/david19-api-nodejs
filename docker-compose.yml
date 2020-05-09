@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  consumer:
+    build:
+      dockerfile: Dockerfile.consumer
+      context: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    environment:
+      MONGODB_URL: mongodb://mongo:27017/david19
+      CONSUMER_PORT: 8081
+    networks:
+      - default
+
+  api:
+    build:
+      dockerfile: Dockerfile.api
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      MONGODB_URL: mongodb://mongo:27017/david19
+      API_PORT: 8080
+    networks:
+      - default
+
+  seeder:
+    build:
+      dockerfile: Dockerfile.seeder
+      context: .
+    networks:
+      - default
+
+  mongo:
+    image: mongo:4.2.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./tmp:/data/db
+    networks:
+      - default

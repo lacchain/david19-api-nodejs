@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import countryModel from "./model/country.js";
 import userModel from "./model/user.js";
-import { getAgeRanges, getCountryRank, getPipeline } from "./query.js";
+import { getAgeRanges, getCountryRank, getPipeline } from "./util/queries.js";
 
 export default class MongoDAO {
 
 	constructor() {
-		mongoose.connect( 'mongodb://localhost:27017/david19', { useNewUrlParser: true, useUnifiedTopology: true } );
+		mongoose.connect( process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true } );
 
 		const userSchema = mongoose.Schema( userModel );
 		userSchema.index( { 'location': '2d' } );
@@ -18,14 +18,6 @@ export default class MongoDAO {
 			'user': mongoose.model( 'user', userSchema ),
 			'country': mongoose.model( 'country', countrySchema )
 		};
-	}
-
-	insert( data, model ) {
-		return new this.models[model]( data ).save();
-	}
-
-	getUsers() {
-		return this.models['user'].find( {} );
 	}
 
 	getCountry( location ) {
@@ -57,10 +49,6 @@ export default class MongoDAO {
 		} );
 	}
 
-	getByUID( uid, model ) {
-		return this.models[model].findOne( { uid } );
-	}
-
 	getClusters( box, factor, filter ) {
 		return this.models['user'].aggregate( getPipeline( box, factor, filter ) );
 	}
@@ -71,15 +59,6 @@ export default class MongoDAO {
 
 	getCountryRanking() {
 		return this.models['user'].aggregate( getCountryRank() );
-	}
-
-	getGlobalStatus() {
-		return this.models['user'].aggregate( [{
-			$group: {
-				_id: "$status",
-				count: { $sum: 1 },
-			}
-		}] );
 	}
 
 }

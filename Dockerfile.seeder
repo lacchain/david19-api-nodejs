@@ -1,0 +1,3 @@
+FROM mongo:4.2.0
+COPY countries.json /countries.json
+CMD mongoimport --host mongo --db david19 --collection countries --type json --file /countries.json --jsonArray

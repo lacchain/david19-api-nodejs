@@ -1,16 +1,9 @@
-import Web3 from "web3";
-import config from "./config.json"
-import MongoDAO from "./dao.js";
-import { CovidCode, Statuses, Symptoms } from "./constants.js";
+import { CovidCode, Statuses, Symptoms, hexToAscii } from "./util/constants.js";
 import geoHash from "ngeohash";
 
 export default class CovidContract {
 
-	constructor(dao) {
-		this.web3 = new Web3( config.provider.url );
-		const web3Socket = new Web3( config.provider.socket );
-		this.contract = new this.web3.eth.Contract( config.contract.abi, config.contract.address );
-		this.contractSocket = new web3Socket.eth.Contract( config.contract.abi, config.contract.address );
+	constructor( dao ) {
 		this.dao = dao;
 	}
 
@@ -19,7 +12,7 @@ export default class CovidContract {
 		const hash = returnValues.hash;
 		const gender = returnValues.sex;
 		const age = parseInt( returnValues.age );
-		const geohash = Web3.utils.toAscii( returnValues.geoHash );
+		const geohash = hexToAscii( returnValues.geoHash );
 		const credentialType = parseInt( returnValues.credentialType );
 		const interruptionReason = parseInt( returnValues.reason );
 		const symptoms = parseInt( returnValues.symptoms );
@@ -81,8 +74,8 @@ export default class CovidContract {
 	}
 
 	async revokeCredential( { returnValues } ) {
-		const subjectId = Web3.utils.hexToUtf8( returnValues.id );
-		const hash = Web3.utils.hexToUtf8( returnValues.hash );
+		const subjectId = returnValues.id;
+		const hash = returnValues.hash;
 
 		const user = await this.dao.getUser( subjectId );
 		if( !user ) return false;
@@ -116,39 +109,6 @@ export default class CovidContract {
 				break;
 		}
 		user.save();
-	}
-
-	getAllEvents( fromBlock = 0, toBlock = 'latest' ) {
-		return this.contract.getPastEvents( "allEvents", {
-			fromBlock,
-			toBlock
-		} );
-	}
-
-	* processEvents( events ) {
-		for( const event of events ) {
-			if( event.event === 'CredentialRegistered' ) {
-				yield this.registerCredential( event );
-			} else if( event.event === 'CredentialRevoked' ) {
-				yield this.revokeCredential( event );
-			}
-		}
-	}
-
-	subscribe() {
-		this.contractSocket.events.CredentialRegistered( {
-			filter: {},
-		}, ( error, event ) => {
-			if( error ) {
-				console.error( error );
-				return;
-			}
-			this.registerCredential( event ).then( result => {
-				console.log( new Date().getTime(), result._doc.subjectId );
-			} ).catch( error => {
-				console.error( error );
-			} );
-		} )
 	}
 
 }
