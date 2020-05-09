@@ -27,7 +27,7 @@ app.post( '/event', async( req, res ) => {
 				symptoms: nonIndexedParameters[9].value
 			}
 		} ).then( result => {
-			console.info( name, new Date().getTime(), result._doc.subjectId );
+			console.info( name, new Date().getTime(), result._doc.subjectId, result._doc.geohash );
 		} ).catch( error => {
 			console.debug( name, new Date().getTime(), error, JSON.stringify( req.body ) );
 		} );
