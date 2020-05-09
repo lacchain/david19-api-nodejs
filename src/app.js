@@ -51,5 +51,5 @@ app.post( '/map', cache( '1 minute' ), async( req, res ) => {
 const server = http.createServer( app );
 
 server.listen( process.env.API_PORT, function() {
-	console.log( 'DAVID19 API Server listening on ', process.env.API_PORT );
+	console.log( 'DAVID19 API Server v1.01 on port', process.env.API_PORT );
 } );

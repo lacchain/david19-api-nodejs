@@ -54,5 +54,5 @@ app.post( '/block', async( req, res ) => {
 const server = http.createServer( app );
 
 server.listen( process.env.CONSUMER_PORT, function() {
-	console.log( 'DAVID19 Consumer Service listening on ', process.env.CONSUMER_PORT );
+	console.log( 'DAVID19 Consumer Service v1.01 on port', process.env.CONSUMER_PORT );
 } );
