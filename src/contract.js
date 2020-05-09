@@ -6,12 +6,12 @@ import geoHash from "ngeohash";
 
 export default class CovidContract {
 
-	constructor() {
+	constructor(dao) {
 		this.web3 = new Web3( config.provider.url );
 		const web3Socket = new Web3( config.provider.socket );
 		this.contract = new this.web3.eth.Contract( config.contract.abi, config.contract.address );
 		this.contractSocket = new web3Socket.eth.Contract( config.contract.abi, config.contract.address );
-		this.dao = new MongoDAO();
+		this.dao = dao;
 	}
 
 	async registerCredential( { returnValues } ) {
