@@ -12,8 +12,8 @@ app.use( cors() );
 app.use( express.json() );
 
 app.post( '/event', async( req, res ) => {
-	const { name, indexedParameters, nonIndexedParameters } = req.body;
-	if( name === 'CredentialRegistered' ) {
+	const { name, status, indexedParameters, nonIndexedParameters } = req.body;
+	if( name === 'CredentialRegistered' && status === 'CONFIRMED' ) {
 		contract.registerCredential( {
 			name,
 			returnValues: {
@@ -31,7 +31,7 @@ app.post( '/event', async( req, res ) => {
 		} ).catch( error => {
 			console.debug( name, new Date().getTime(), error, JSON.stringify( req.body ) );
 		} );
-	} else if( name === 'CredentialRevoked' ) {
+	} else if( name === 'CredentialRevoked' && status === 'CONFIRMED' ) {
 		contract.revokeCredential( {
 			name,
 			returnValues: {
