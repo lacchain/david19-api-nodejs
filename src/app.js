@@ -4,6 +4,7 @@ import cors from 'cors';
 import MongoDAO from "./dao.js";
 import { Zoom } from "./util/constants.js";
 import apicache from "apicache";
+import logger from "morgan";
 
 const app = express();
 const dao = new MongoDAO();
@@ -12,19 +13,29 @@ const cache = apicache.middleware;
 
 app.use( cors() );
 app.use( express.json() );
+app.use( express.urlencoded( { extended: false } ) );
+app.use( logger( 'dev' ) );
 
 apicache.options( {
 	appendKey: ( req, res ) => `${req.path}:${JSON.stringify( req.body )}`
 } )
 
 app.get( '/', cache( '1 minute' ), async( req, res ) => {
-	res.status( 200 ).send( await dao.getCountryRanking() );
+	try {
+		res.status( 200 ).send( await dao.getCountryRanking() );
+	} catch( error ) {
+		res.status( 500 ).send( error );
+	}
 } );
 
 app.post( '/ages', cache( '1 minute' ), async( req, res ) => {
 	const { status, filter } = req.body;
-	const ranges = await dao.getAgeRanges( parseInt( status ), filter );
-	res.status( 200 ).send( ranges );
+	try {
+		const ranges = await dao.getAgeRanges( parseInt( status ), filter );
+		res.status( 200 ).send( ranges );
+	} catch( error ) {
+		res.status( 500 ).send( error );
+	}
 } );
 
 app.post( '/map', cache( '1 minute' ), async( req, res ) => {
