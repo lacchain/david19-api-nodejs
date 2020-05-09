@@ -20,7 +20,7 @@ apicache.options( {
 	appendKey: ( req, res ) => `${req.path}:${JSON.stringify( req.body )}`
 } )
 
-app.get( '/loaderio-beed9861fed14cb68841ad3e61ac277a', ( req, res ) => res.status( 200 ).send("") );
+app.get( '/loaderio-beed9861fed14cb68841ad3e61ac277a', ( req, res ) => res.status( 200 ).send("loaderio-beed9861fed14cb68841ad3e61ac277a") );
 
 app.get( '/', cache( '1 minute' ), async( req, res ) => {
 	try {
