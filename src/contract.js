@@ -108,7 +108,7 @@ export default class CovidContract {
 				user.symptoms = [];
 				break;
 		}
-		user.save();
+		return user.save();
 	}
 
 }
