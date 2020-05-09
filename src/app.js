@@ -29,8 +29,12 @@ app.post( '/ages', cache( '1 minute' ), async( req, res ) => {
 
 app.post( '/map', cache( '1 minute' ), async( req, res ) => {
 	const { box, zoom, filter } = req.body;
-	const clusters = await dao.getClusters( box, Zoom[zoom], filter );
-	res.status( 200 ).send( clusters );
+	try {
+		const clusters = await dao.getClusters( box, Zoom[zoom], filter );
+		res.status( 200 ).send( clusters );
+	} catch( error ) {
+		res.status( 500 ).send( error );
+	}
 } );
 
 const server = http.createServer( app );
