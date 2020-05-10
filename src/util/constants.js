@@ -1,13 +1,13 @@
 import utf8 from "utf8";
 
 export const Symptoms = {
-	Fever: 0b0000001,
-	Cough: 0b0000010,
-	BreathingIssues: 0b0000100,
-	LostSmell: 0b0001000,
-	Headache: 0b0010000,
-	MusclePain: 0b0100000,
-	SoreThroat: 0b1000000
+	Fever: 0b00000010,
+	Cough: 0b00000100,
+	BreathingIssues: 0b00001000,
+	LostSmell: 0b00010000,
+	Headache: 0b00100000,
+	MusclePain: 0b01000000,
+	SoreThroat: 0b10000000
 };
 
 export const CovidCode = {

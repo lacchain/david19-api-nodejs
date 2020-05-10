@@ -57,7 +57,7 @@ export default class CovidContract {
 					user.status = Statuses.Healthy;
 				} else {
 					user.symptoms = Object.keys( Symptoms ).reduce( ( dict, symptom ) => {
-						if( ( symptoms & Symptoms[symptom] ) > 0 )
+						if( symptoms > 0 && ( symptoms & Symptoms[symptom] ) > 0 )
 							dict[symptom.slice( 0, 1 ).toLowerCase() + symptom.slice( 1 )] = true;
 						return dict;
 					}, {} );
