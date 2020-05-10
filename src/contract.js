@@ -1,4 +1,4 @@
-import { CovidCode, Statuses, Symptoms, hexToUTF8 } from "./util/constants.js";
+import { CovidCode, hexToUTF8, Statuses, Symptoms } from "./util/constants.js";
 import geoHash from "ngeohash";
 
 export default class CovidContract {
@@ -62,6 +62,9 @@ export default class CovidContract {
 						return dict;
 					}, {} );
 					user.withSymptoms = symptoms > 0;
+				}
+				if( user.status === 0 && symptoms > 0 ) {
+					user.status = Statuses.WithSymptoms;
 				}
 				break;
 		}
