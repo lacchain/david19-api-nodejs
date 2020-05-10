@@ -1,3 +1,5 @@
+import { Statuses } from "./constants.js";
+
 export const getPipeline = ( box, factor, filters ) => {
 	// Stage 0 - Filter by country, state, gender or age (Optional)
 	let filter = { $match: { $and: [] } };
@@ -38,7 +40,7 @@ export const getPipeline = ( box, factor, filters ) => {
 				$sum: { $cond: { if: { $eq: ["$status", 0] }, then: 1, else: 0 } }
 			},
 			withSymptomsCount: {
-				$sum: { $cond: { if: { $eq: ["$status", 1] }, then: 1, else: 0 } }
+				$sum: { $cond: { if: { $eq: ["$withSymptoms", true] }, then: 1, else: 0 } }
 			},
 			affectedCount: {
 				$sum: { $cond: { if: { $eq: ["$status", 2] }, then: 1, else: 0 } }
@@ -184,7 +186,16 @@ export const getAgeRanges = ( status = 3, filter ) => {
 				status
 			}]
 		}
-	};
+	}
+	if( status === Statuses.WithSymptoms ) {
+		matcher = {
+			$match: {
+				$and: [{
+					withSymptoms: true
+				}]
+			}
+		}
+	}
 	if( filter.country ) matcher['$match']['$and'].push( { country: filter.country } );
 	if( filter.state ) matcher['$match']['$and'].push( { region: filter.state } );
 	const group = {
@@ -251,7 +262,7 @@ export const getCountryRank = () => {
 				$sum: { $cond: { if: { $eq: ["$status", 0] }, then: 1, else: 0 } }
 			},
 			withSymptomsCount: {
-				$sum: { $cond: { if: { $eq: ["$status", 1] }, then: 1, else: 0 } }
+				$sum: { $cond: { if: { $eq: ["$withSymptoms", true] }, then: 1, else: 0 } }
 			},
 			affectedCount: {
 				$sum: { $cond: { if: { $eq: ["$status", 2] }, then: 1, else: 0 } }

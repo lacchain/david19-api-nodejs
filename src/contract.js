@@ -53,15 +53,15 @@ export default class CovidContract {
 				user.interruptionReason = interruptionReason;
 				break;
 			case CovidCode.Symptoms:
-				if( symptoms === 0 ) {
+				if( symptoms === 0 && !( user.status && user.status > 0 ) ) {
 					user.status = Statuses.Healthy;
 				} else {
-					user.status = Statuses.WithSymptoms
 					user.symptoms = Object.keys( Symptoms ).reduce( ( dict, symptom ) => {
 						if( ( symptoms & Symptoms[symptom] ) > 0 )
 							dict[symptom.slice( 0, 1 ).toLowerCase() + symptom.slice( 1 )] = true;
 						return dict;
 					}, {} );
+					user.withSymptoms = symptoms > 0;
 				}
 				break;
 		}

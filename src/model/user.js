@@ -17,6 +17,7 @@ export default {
 	age: Number,
 	gender: Number,
 	confined: Boolean,
+	withSymptoms: Boolean,
 	interruptionReason: String,
 	lastUpdate: Date,
 	history: [{
