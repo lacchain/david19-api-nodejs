@@ -22,8 +22,7 @@ export const Statuses = {
 	Healthy: 0,
 	WithSymptoms: 1,
 	Affected: 2,
-	Recovered: 3,
-	Unknown: 4
+	Recovered: 3
 };
 
 export const Zoom = {
@@ -49,7 +48,7 @@ export const Zoom = {
 	20: 6
 }
 
-export const hexToAscii = function(hex) {
+export const hexToUTF8 = function(hex) {
 	let str = "";
 	let code = 0;
 	hex = hex.replace(/^0x/i,'');

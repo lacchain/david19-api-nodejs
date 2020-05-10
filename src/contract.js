@@ -1,4 +1,4 @@
-import { CovidCode, Statuses, Symptoms, hexToAscii } from "./util/constants.js";
+import { CovidCode, Statuses, Symptoms, hexToUTF8 } from "./util/constants.js";
 import geoHash from "ngeohash";
 
 export default class CovidContract {
@@ -12,7 +12,7 @@ export default class CovidContract {
 		const hash = returnValues.hash;
 		const gender = returnValues.sex;
 		const age = parseInt( returnValues.age );
-		const geohash = hexToAscii( returnValues.geoHash );
+		const geohash = hexToUTF8( returnValues.geoHash );
 		const credentialType = parseInt( returnValues.credentialType );
 		const interruptionReason = parseInt( returnValues.reason );
 		const symptoms = parseInt( returnValues.symptoms );
@@ -70,44 +70,6 @@ export default class CovidContract {
 			kind: credentialType,
 			status: user.status
 		} );
-		return user.save();
-	}
-
-	async revokeCredential( { returnValues } ) {
-		const subjectId = returnValues.id;
-		const hash = returnValues.hash;
-
-		const user = await this.dao.getUser( subjectId );
-		if( !user ) return false;
-
-		const previous = user.history.find( h => h.hash === hash );
-		if( !previous ) return false;
-
-		if( user.history.length < 2 ) {
-			user.history = [];
-			user.status = Statuses.Unknown;
-			return user.save();
-		}
-
-		switch( previous.kind ) {
-			case CovidCode.Infection:
-				user.status = user.history[user.length - 1].status;
-				break;
-			case CovidCode.Recovery:
-				user.status = Statuses.Affected;
-				break;
-			case CovidCode.Confinement:
-				user.confined = false;
-				break;
-			case CovidCode.Interruption:
-				user.confined = true;
-				user.interruptionReason = null;
-				break;
-			case CovidCode.Symptoms:
-				user.status = user.history[user.length - 1].status;
-				user.symptoms = [];
-				break;
-		}
 		return user.save();
 	}
 

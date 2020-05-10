@@ -31,19 +31,7 @@ app.post( '/event', async( req, res ) => {
 		} ).catch( error => {
 			console.debug( name, new Date().getTime(), error, JSON.stringify( req.body ) );
 		} );
-	} /*else if( name === 'CredentialRevoked' && status === 'CONFIRMED' ) {
-		contract.revokeCredential( {
-			name,
-			returnValues: {
-				hash: indexedParameters[0].value,
-				id: nonIndexedParameters[0].value,
-			}
-		} ).then( result => {
-			console.error( name, new Date().getTime(), result._doc.subjectId );
-		} ).catch( error => {
-			console.debug( name, new Date().getTime(), error, JSON.stringify( req.body ) );
-		} );
-	}*/
+	}
 	res.status( 200 ).send( {} );
 } );
 
