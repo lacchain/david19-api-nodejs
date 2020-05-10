@@ -55,6 +55,7 @@ export default class CovidContract {
 			case CovidCode.Symptoms:
 				if( symptoms === 0 && ( !user.status || user.status === Statuses.Healthy || user.status === Statuses.WithSymptoms ) ) {
 					user.status = Statuses.Healthy;
+					user.symptoms = [];
 				} else {
 					user.symptoms = Object.keys( Symptoms ).reduce( ( dict, symptom ) => {
 						if( symptoms > 0 && ( symptoms & Symptoms[symptom] ) > 0 )
