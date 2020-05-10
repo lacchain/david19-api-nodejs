@@ -4,7 +4,7 @@ export default {
 		fever: Boolean,
 		cough: Boolean,
 		breathingIssues: Boolean,
-		lossSmell: Boolean,
+		lostSmell: Boolean,
 		headache: Boolean,
 		musclePain: Boolean,
 		soreThroat: Boolean
