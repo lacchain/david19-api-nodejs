@@ -18,7 +18,7 @@ app.post( '/event', async( req, res ) => {
 			name,
 			returnValues: {
 				hash: indexedParameters[0].value,
-				id: nonIndexedParameters[0].value,
+				id: nonIndexedParameters[1].value,
 				sex: nonIndexedParameters[4].value,
 				age: nonIndexedParameters[5].value,
 				geoHash: nonIndexedParameters[6].value,
