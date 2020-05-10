@@ -61,7 +61,7 @@ export default class CovidContract {
 							dict[symptom.slice( 0, 1 ).toLowerCase() + symptom.slice( 1 )] = true;
 						return dict;
 					}, {} );
-					if( (!user.status || user.status === Statuses.Healthy) && symptoms > 0 ) {
+					if( ( !user.status || user.status === Statuses.Healthy ) && symptoms > 0 ) {
 						user.status = Statuses.WithSymptoms;
 					}
 				}
