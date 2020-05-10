@@ -31,7 +31,7 @@ app.post( '/event', async( req, res ) => {
 		} ).catch( error => {
 			console.debug( name, new Date().getTime(), error, JSON.stringify( req.body ) );
 		} );
-	} else if( name === 'CredentialRevoked' && status === 'CONFIRMED' ) {
+	} /*else if( name === 'CredentialRevoked' && status === 'CONFIRMED' ) {
 		contract.revokeCredential( {
 			name,
 			returnValues: {
@@ -43,7 +43,7 @@ app.post( '/event', async( req, res ) => {
 		} ).catch( error => {
 			console.debug( name, new Date().getTime(), error, JSON.stringify( req.body ) );
 		} );
-	}
+	}*/
 	res.status( 200 ).send( {} );
 } );
 
