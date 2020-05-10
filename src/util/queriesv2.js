@@ -58,7 +58,7 @@ export const getPipeline = ( box, factor, filters ) => {
 				$sum: { $cond: { if: { $eq: ["$symptoms.breathingIssues", true] }, then: 1, else: 0 } }
 			},
 			lostSmellCount: {
-				$sum: { $cond: { if: { $eq: ["$symptoms.lostSmell", true] }, then: 1, else: 0 } }
+				$sum: { $cond: { if: { $eq: ["$symptoms.lossSmell", true] }, then: 1, else: 0 } }
 			},
 			headacheCount: {
 				$sum: { $cond: { if: { $eq: ["$symptoms.headache", true] }, then: 1, else: 0 } }
