@@ -34,7 +34,7 @@ export const getPipeline = ( box, factor, filters ) => {
 				$sum: { $cond: { if: { $eq: ["$gender", 3] }, then: 1, else: 0 } }
 			},
 			confinedCount: {
-				$sum: { $cond: { if: { $eq: ["$confined", 1] }, then: 1, else: 0 } }
+				$sum: { $cond: { if: { $eq: ["$confined", true] }, then: 1, else: 0 } }
 			},
 			healthyCount: {
 				$sum: { $cond: { if: { $eq: ["$status", 0] }, then: 1, else: 0 } }
