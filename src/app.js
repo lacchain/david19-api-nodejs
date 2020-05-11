@@ -20,7 +20,7 @@ apicache.options( {
 	appendKey: ( req, res ) => `${req.path}:${JSON.stringify( req.body )}`
 } )
 
-app.get( '/loaderio-beed9861fed14cb68841ad3e61ac277a', ( req, res ) => res.status( 200 ).send("loaderio-beed9861fed14cb68841ad3e61ac277a") );
+app.get( '/loaderio-beed9861fed14cb68841ad3e61ac277a', ( req, res ) => res.status( 200 ).send( "loaderio-beed9861fed14cb68841ad3e61ac277a" ) );
 
 app.get( '/', cache( '1 minute' ), async( req, res ) => {
 	try {
@@ -44,6 +44,16 @@ app.post( '/map', cache( '1 minute' ), async( req, res ) => {
 	const { box, zoom, filter } = req.body;
 	try {
 		const clusters = await dao.getClusters( box, Zoom[zoom], filter );
+		res.status( 200 ).send( clusters );
+	} catch( error ) {
+		res.status( 500 ).send( error );
+	}
+} );
+
+app.post( '/query', cache( '1 minute' ), async( req, res ) => {
+	const { box, zoom, filter } = req.body;
+	try {
+		const clusters = await dao.getQuery( box, Zoom[zoom], filter );
 		res.status( 200 ).send( clusters );
 	} catch( error ) {
 		res.status( 500 ).send( error );

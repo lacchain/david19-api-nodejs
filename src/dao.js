@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import countryModel from "./model/country.js";
 import userModel from "./model/user.js";
-import { getAgeRanges, getCountryRank, getPipeline } from "./util/queriesv2.js";
+import { getAgeRanges, getCountryRank, getPipeline, getPipeline2 } from "./util/queriesv2.js";
 
 export default class MongoDAO {
 
@@ -52,6 +52,10 @@ export default class MongoDAO {
 
 	getClusters( box, factor, filter ) {
 		return this.models['user'].aggregate( getPipeline( box, factor, filter ) );
+	}
+
+	getQuery( box, factor, filter ) {
+		return this.models['user'].aggregate( getPipeline2( box, factor, filter ) );
 	}
 
 	getAgeRanges( status, filter ) {
