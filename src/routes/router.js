@@ -49,9 +49,7 @@ export default class Router {
 						status: 200,
 						executionTime: latency
 					},
-					request: {
-						...params[0].body
-					}
+					request: JSON.stringify( params[0].body )
 				} );
 				if( this.handleMetrics )
 					this.metrics.setLatencyValue( params[0].path, latency );
@@ -62,7 +60,6 @@ export default class Router {
 						error: JSON.stringify( error )
 					},
 					request: JSON.stringify( params[0].body )
-
 				} );
 				if( this.handleMetrics )
 					this.metrics.incrementErrorCount( params[0].path );
