@@ -17,6 +17,7 @@ services:
       ELASTIC_NODE_URL: https://af9d320d7f6b4034aa0e745027177116.us-east1.gcp.elastic-cloud.com:9243/
       ELASTIC_API_KEY: J5uroNDJV88RdtKDQE6sQL8z
       ELASTIC_CONSUMER_INDEX: david19-consumer
+      LOGGER_LEVEL: debug
     networks:
       - default
 
@@ -36,6 +37,7 @@ services:
       ELASTIC_NODE_URL: https://af9d320d7f6b4034aa0e745027177116.us-east1.gcp.elastic-cloud.com:9243/
       ELASTIC_API_KEY: J5uroNDJV88RdtKDQE6sQL8z
       ELASTIC_API_INDEX: david19-api
+      LOGGER_LEVEL: debug
     networks:
       - default
 
