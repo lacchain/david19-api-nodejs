@@ -5,30 +5,33 @@ import ElasticSearch from "@elastic/elasticsearch";
 export default class Logger {
 
 	constructor() {
-		this.client = new ElasticSearch.Client( {
-			node: process.env.ELASTIC_NODE_URL,
-			auth: {
-				username: 'elastic',
-				password: process.env.ELASTIC_API_KEY
-			}
-		} )
+		if( process.env.LOGGER_LEVEL !== 'none' )
+			this.client = new ElasticSearch.Client( {
+				node: process.env.ELASTIC_NODE_URL,
+				auth: {
+					username: 'elastic',
+					password: process.env.ELASTIC_API_KEY
+				}
+			} )
 	}
 
 	instance( index ) {
+		const level = process.env.LOGGER_LEVEL;
 		return winston.createLogger( {
 			transports: [
-				new WinstonElastic.ElasticsearchTransport( {
-					level: process.env.LOGGER_LEVEL,
+				...( level !== 'none' ? [new WinstonElastic.ElasticsearchTransport( {
+					level,
 					index,
 					client: this.client
-				} ),
+				} )] : [] ),
 				new winston.transports.Console( {
-					level: process.env.LOGGER_LEVEL,
+					level,
 					handleExceptions: true,
 					json: true,
 					colorize: true
 				} )
-			]
+			],
+			silent: level === 'none'
 		} );
 
 	}
