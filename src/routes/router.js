@@ -59,11 +59,10 @@ export default class Router {
 				this.logger.error( `${params[0].method} ${params[0].path}`, {
 					response: {
 						status: 500,
-						error
+						error: JSON.stringify( error )
 					},
-					request: {
-						...params[0].body
-					}
+					request: JSON.stringify( params[0].body )
+
 				} );
 				if( this.handleMetrics )
 					this.metrics.incrementErrorCount( params[0].path );

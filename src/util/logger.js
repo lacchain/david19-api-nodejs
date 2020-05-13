@@ -6,9 +6,10 @@ export default class Logger {
 
 	constructor() {
 		this.client = new ElasticSearch.Client( {
-			node:  process.env.ELASTIC_NODE_URL,
+			node: process.env.ELASTIC_NODE_URL,
 			auth: {
-				apiKey: process.env.ELASTIC_API_KEY
+				username: 'elastic',
+				password: process.env.ELASTIC_API_KEY
 			}
 		} )
 	}
@@ -17,12 +18,12 @@ export default class Logger {
 		return winston.createLogger( {
 			transports: [
 				new WinstonElastic.ElasticsearchTransport( {
-					level: 'debug',
+					level: process.env.LOGGER_LEVEL,
 					index,
 					client: this.client
 				} ),
 				new winston.transports.Console( {
-					level: 'debug',
+					level: process.env.LOGGER_LEVEL,
 					handleExceptions: true,
 					json: true,
 					colorize: true
