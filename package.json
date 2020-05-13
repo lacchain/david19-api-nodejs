@@ -8,6 +8,9 @@
 		"consumer": "node --experimental-modules src/consumer.js"
 	},
 	"dependencies": {
+		"@elastic/elasticsearch": "^7.6.1",
+		"@opentelemetry/exporter-prometheus": "^0.8.0",
+		"@opentelemetry/metrics": "^0.8.0",
 		"apicache": "^1.5.3",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
@@ -15,6 +18,8 @@
 		"mongoose": "^5.9.9",
 		"morgan": "^1.10.0",
 		"ngeohash": "^0.6.3",
-		"utf8": "^3.0.0"
+		"utf8": "^3.0.0",
+		"winston": "^3.2.1",
+		"winston-elasticsearch": "^0.8.8"
 	}
 }
