@@ -541,7 +541,7 @@ export const getCountryPoints = () => {
 }
 
 export const getPointsRanking = () => {
-	return [ {
+	return [{
 		$project: {
 			_id: 0,
 			history: 0,
@@ -554,9 +554,85 @@ export const getPointsRanking = () => {
 			age: 0,
 			gender: 0
 		}
-	},{
+	}, {
 		$sort: { points: -1 }
 	}, {
 		$limit: 100
+	}]
+}
+
+export const getUserRankPosition = ( subjectId ) => {
+	return [{
+		$project: {
+			_id: 1,
+			subjectId: "$subjectId",
+			points: 1
+		}
+	}, {
+		$sort: { points: -1 }
+	}, {
+		$group: {
+			_id: {},
+			arr: {
+				$push: {
+					subjectId: '$subjectId',
+					points: '$points'
+				}
+			}
+		}
+	}, {
+		$unwind: {
+			path: '$arr',
+			includeArrayIndex: 'globalRank',
+		}
+	}, {
+		$match: {
+			"arr.subjectId": subjectId
+		}
+	}, {
+		$project: {
+			_id: 0,
+			position: '$globalRank'
+		}
+	}]
+}
+
+export const getUserRankPositionCountry = ( country, subjectId ) => {
+	return [{
+		$match: {
+			"country": country
+		}
+	}, {
+		$project: {
+			_id: 1,
+			subjectId: "$subjectId",
+			points: 1
+		}
+	}, {
+		$sort: { points: -1 }
+	}, {
+		$group: {
+			_id: {},
+			arr: {
+				$push: {
+					subjectId: '$subjectId',
+					points: '$points'
+				}
+			}
+		}
+	}, {
+		$unwind: {
+			path: '$arr',
+			includeArrayIndex: 'globalRank',
+		}
+	}, {
+		$match: {
+			"arr.subjectId": subjectId
+		}
+	}, {
+		$project: {
+			_id: 0,
+			position: '$globalRank'
+		}
 	}]
 }

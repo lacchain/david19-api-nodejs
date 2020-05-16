@@ -7,7 +7,9 @@ import {
 	getCountryRank,
 	getPipeline,
 	getPipeline2,
-	getPointsRanking
+	getPointsRanking,
+	getUserRankPosition,
+	getUserRankPositionCountry
 } from "./util/queriesv2.js";
 
 export default class MongoDAO {
@@ -79,6 +81,14 @@ export default class MongoDAO {
 
 	getPointsRanking() {
 		return this.models['user'].aggregate( getPointsRanking() );
+	}
+
+	getUserRankPosition( subjectId ) {
+		return this.models['user'].aggregate( getUserRankPosition( subjectId ) );
+	}
+
+	getUserRankPositionCountry( country, subjectId ) {
+		return this.models['user'].aggregate( getUserRankPositionCountry( country, subjectId ) );
 	}
 
 }

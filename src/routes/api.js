@@ -33,11 +33,25 @@ export default class APIRouter extends Router {
 			return this.dao.getCountryPoints();
 		} );
 
-		this.get( '/points/user/:id', '10 second', async req => {
+		this.get( '/points/user/:id', '1 minute', async req => {
 			const { id } = req.params;
 			const user = await this.dao.getUser( id );
-			if( !user ) return 0;
-			return user.points || 0;
+			if( !user ) return { points: 0 };
+			return user.points;
+		} );
+
+		this.get( '/points/user/:id/ranking', '1 minute', async req => {
+			const { id } = req.params;
+			const user = await this.dao.getUser( id );
+			if( !user ) return {};
+
+			const globalPosition = await this.dao.getUserRankPosition( id );
+			const countryPosition = await this.dao.getUserRankPositionCountry( user.country, id );
+			return {
+				country: user.country,
+				globalPosition: globalPosition[0].position,
+				countryPosition: countryPosition[0].position
+			};
 		} );
 
 		this.get( '/points/ranking', '1 minute', () => {
