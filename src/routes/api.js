@@ -29,5 +29,20 @@ export default class APIRouter extends Router {
 			return this.dao.getQuery( box, Zoom[zoom], filter );
 		} );
 
+		this.get( '/points', '1 minute', () => {
+			return this.dao.getCountryPoints();
+		} );
+
+		this.get( '/points/user/:id', '10 second', async req => {
+			const { id } = req.params;
+			const user = await this.dao.getUser( id );
+			if( !user ) return 0;
+			return user.points || 0;
+		} );
+
+		this.get( '/points/ranking', '1 minute', () => {
+			return this.dao.getPointsRanking();
+		} );
+
 	}
 }

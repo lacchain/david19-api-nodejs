@@ -53,6 +53,22 @@ export default class ConsumerRouter extends Router {
 				this.logger.info( 'CredentialRevoked', {
 					hash: indexedParameters[0].value
 				} );
+			} else if( name === 'PointsSet' && status === 'CONFIRMED' ) {
+				const eventValues = {
+					subjectId: indexedParameters[0].value,
+					points: nonIndexedParameters[1].value
+				};
+				this.contract.setUserScore( {
+					returnValues: eventValues
+				} ).then( () => {
+					this.logger.info( 'ScoreUser', eventValues );
+				} ).catch( error => {
+					this.logger.error( 'ScoreUser', {
+						...eventValues,
+						error
+					} );
+					this.metrics.incrementErrorCount();
+				} );
 			}
 			if( status === 'CONFIRMED' ) {
 				this.metrics.incrementEventsCount( name );

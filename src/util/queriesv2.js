@@ -528,3 +528,35 @@ export const getCountryRank = () => {
 		}
 	}]
 }
+
+export const getCountryPoints = () => {
+	return [{
+		$group: {
+			_id: "$country",
+			points: {
+				$sum: "$points"
+			}
+		}
+	}]
+}
+
+export const getPointsRanking = () => {
+	return [ {
+		$project: {
+			_id: 0,
+			history: 0,
+			__v: 0,
+			confined: 0,
+			interruptionReason: 0,
+			symptoms: 0,
+			withSymptoms: 0,
+			geohash: 0,
+			age: 0,
+			gender: 0
+		}
+	},{
+		$sort: { points: -1 }
+	}, {
+		$limit: 100
+	}]
+}

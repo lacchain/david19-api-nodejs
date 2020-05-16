@@ -18,5 +18,5 @@ app.use( '/', consumerRouter.getRouter() );
 const server = http.createServer( app );
 
 server.listen( process.env.CONSUMER_PORT, function() {
-	console.log( 'DAVID19 Consumer Service v1.02 on port', process.env.CONSUMER_PORT );
+	console.log( 'DAVID19 Consumer Service v1.03 on port', process.env.CONSUMER_PORT );
 } );

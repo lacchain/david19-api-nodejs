@@ -27,5 +27,9 @@ export default {
 		hash: String,
 		kind: Number,
 		status: Number
-	}]
+	}],
+	points: {
+		type: Number,
+		default: 0
+	}
 }

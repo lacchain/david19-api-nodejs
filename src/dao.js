@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
 import countryModel from "./model/country.js";
 import userModel from "./model/user.js";
-import { getAgeRanges, getCountryRank, getPipeline, getPipeline2 } from "./util/queriesv2.js";
+import {
+	getAgeRanges,
+	getCountryPoints,
+	getCountryRank,
+	getPipeline,
+	getPipeline2,
+	getPointsRanking
+} from "./util/queriesv2.js";
 
 export default class MongoDAO {
 
@@ -64,6 +71,14 @@ export default class MongoDAO {
 
 	getCountryRanking() {
 		return this.models['user'].aggregate( getCountryRank() );
+	}
+
+	getCountryPoints() {
+		return this.models['user'].aggregate( getCountryPoints() );
+	}
+
+	getPointsRanking() {
+		return this.models['user'].aggregate( getPointsRanking() );
 	}
 
 }

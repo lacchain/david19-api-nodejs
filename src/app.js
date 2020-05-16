@@ -22,5 +22,5 @@ app.use( '/', apiRouter.getRouter() );
 const server = http.createServer( app );
 
 server.listen( process.env.API_PORT, function() {
-	console.log( 'DAVID19 API Server v1.02 on port', process.env.API_PORT );
+	console.log( 'DAVID19 API Server v1.03 on port', process.env.API_PORT );
 } );
