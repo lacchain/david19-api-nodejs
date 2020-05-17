@@ -44,7 +44,7 @@ export default class ConsumerRouter extends Router {
 				} ).catch( error => {
 					this.logger.error( 'CredentialRegistered', {
 						...eventValues,
-						error
+						error: JSON.stringify( error )
 					} );
 					this.metrics.incrementErrorCount();
 				} );
@@ -65,7 +65,7 @@ export default class ConsumerRouter extends Router {
 				} ).catch( error => {
 					this.logger.error( 'ScoreUser', {
 						...eventValues,
-						error
+						error: JSON.stringify( error )
 					} );
 					this.metrics.incrementErrorCount();
 				} );
