@@ -19,6 +19,7 @@
 		"morgan": "^1.10.0",
 		"ngeohash": "^0.6.3",
 		"utf8": "^3.0.0",
+		"which-country": "^1.0.0",
 		"winston": "^3.2.1",
 		"winston-elasticsearch": "^0.8.8"
 	}

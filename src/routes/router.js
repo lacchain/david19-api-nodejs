@@ -5,7 +5,7 @@ export default class Router {
 
 	constructor( logger, metrics ) {
 		apicache.options( {
-			appendKey: ( req, res ) => `${req.path}:${JSON.stringify( req.body )}`
+			appendKey: ( req, res ) => `${req.path}:${JSON.stringify( req.body )}:${JSON.stringify( req.query )}:${JSON.stringify( req.params )}`
 		} )
 		this.logger = logger;
 		this.metrics = metrics;

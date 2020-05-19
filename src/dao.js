@@ -35,8 +35,14 @@ export default class MongoDAO {
 			geometry: {
 				$geoIntersects: {
 					$geometry: {
-						"type": "Point",
-						"coordinates": location
+						"type": "Polygon",
+						"coordinates": [[
+							[location[0] - 0.01, location[1] - 0.01],
+							[location[0] - 0.01, location[1] + 0.01],
+							[location[0] + 0.01, location[1] + 0.01],
+							[location[0] + 0.01, location[1] - 0.01],
+							[location[0] - 0.01, location[1] - 0.01]
+						]]
 					}
 				}
 			}
@@ -45,6 +51,19 @@ export default class MongoDAO {
 
 	getUser( subjectId ) {
 		return this.models['user'].findOne( { subjectId } );
+	}
+
+	async updateUnknownUserCountry() {
+		const users = await this.models['user'].find( { country: "" } );
+		for( const user of users ) {
+			const location = ( await this.getCountry( user.location ) );
+			if( location ) {
+				const values = location.properties.iso_3166_2.split( '-' );
+				user.country = values[0];
+				user.region = values[1];
+				user.save();
+			}
+		}
 	}
 
 	newUser( subjectId, gender, age, geohash, coordinates, iso3166_2 ) {
