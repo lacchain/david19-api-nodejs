@@ -46,10 +46,10 @@ export default class APIRouter extends Router {
 		this.get( '/points/user/:id/stats', '1 minute', async req => {
 			const { id } = req.params;
 			const user = await this.dao.getUser( id );
-			if( !user ) throw new Error("Invalid subjectId")
+			if( !user ) throw new Error( "Invalid subjectId" )
 			const totalUsers = await this.dao.getTotalUsers();
-			const countryUsers = await this.dao.getCountryUsers();
-			const regionUsers = await this.dao.getRegionUsers();
+			const countryUsers = await this.dao.getCountryUsers( user.country );
+			const regionUsers = await this.dao.getRegionUsers( user.country, user.region );
 			const globalPosition = await this.dao.getUserRankPosition( id );
 			const countryPosition = await this.dao.getUserRankPositionCountry( user.country, id );
 			const regionPosition = await this.dao.getUserRankPositionRegion( user.country, user.region, id );
