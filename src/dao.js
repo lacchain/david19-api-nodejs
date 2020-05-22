@@ -108,11 +108,11 @@ export default class MongoDAO {
 	}
 
 	getUserRankPosition( subjectId ) {
-		return this.models['user'].aggregate( getUserRankPosition( subjectId ) ).then( result => result[0].position );
+		return this.models['user'].aggregate( getUserRankPosition( subjectId ) ).then( result => result.length > 0 ? result[0].position : 0 );
 	}
 
 	getUserRankPositionCountry( country, subjectId ) {
-		return this.models['user'].aggregate( getUserRankPositionCountry( country, subjectId ) ).then( result => result[0].position );
+		return this.models['user'].aggregate( getUserRankPositionCountry( country, subjectId ) ).then( result => result.length > 0 ? result[0].position : 0 );
 	}
 
 	getUserRankPositionRegion( country, region, subjectId ) {

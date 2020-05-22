@@ -78,8 +78,8 @@ export default class APIRouter extends Router {
 			const countryPosition = await this.dao.getUserRankPositionCountry( user.country, id );
 			return {
 				country: user.country,
-				globalPosition: globalPosition[0].position,
-				countryPosition: countryPosition[0].position
+				globalPosition,
+				countryPosition
 			};
 		} );
 
