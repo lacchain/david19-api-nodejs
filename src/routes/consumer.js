@@ -56,14 +56,15 @@ export default class ConsumerRouter extends Router {
 			} else if( name === 'PointsSet' && status === 'CONFIRMED' ) {
 				const eventValues = {
 					subjectId: indexedParameters[0].value,
-					points: nonIndexedParameters[1].value
+					points: nonIndexedParameters[1].value,
+					level: nonIndexedParameters[2].value,
 				};
 				this.contract.setUserScore( {
 					returnValues: eventValues
 				} ).then( () => {
-					this.logger.info( 'ScoreUser', eventValues );
+					this.logger.info( 'PointsSet', eventValues );
 				} ).catch( error => {
-					this.logger.error( 'ScoreUser', {
+					this.logger.error( 'PointsSet', {
 						...eventValues,
 						error: JSON.stringify( error )
 					} );

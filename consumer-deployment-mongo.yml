@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-consumer-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mongo-consumer-api
+  template:
+    metadata:
+      labels:
+        app: mongo-consumer-api
+    spec:
+      containers:
+      - name: mongo-consumer-api
+        image: gcr.io/lacchain-bid/mongo-consumer:v1
+        resources:
+          requests:
+            memory: 1024Mi
+            cpu: "1"
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8081
+        env:
+        - name: MONGODB_URL 
+          value: mongodb://mongo:27017/david19
+        - name: CONSUMER_PORT 
+          value: "8081"
+        - name: CONSUMER_METRICS_PORT
+          value: "8082"
+        - name: ELASTIC_NODE_URL
+          value: https://af9d320d7f6b4034aa0e745027177116.us-east1.gcp.elastic-cloud.com:9243/
+        - name: ELASTIC_API_KEY
+          value: J5uroNDJV88RdtKDQE6sQL8z
+        - name: ELASTIC_CONSUMER_INDEX
+          value: david19-consumer
+        - name: LOGGER_LEVEL
+          value: info
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-consumer-service
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 8081
+    targetPort: 8081
+    protocol: TCP
+  selector:
+    app: mongo-consumer-api

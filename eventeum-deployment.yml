@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: david19-eventeum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: david19-eventeum
+  template:
+    metadata:
+      labels:
+        app: david19-eventeum
+    spec:
+      containers:
+      - name: david19-eventeum
+        image: gcr.io/lacchain-bid/eventeum:v2
+        resources:
+          limits:
+            cpu: "1.5"
+            memory: 4092Mi
+          requests:
+            cpu: "0.5"
+            memory: 2048Mi
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8060
+        env:
+        - name: JAVA_OPTS
+          value: "-Xmx4g -Xms2g -XX:NewRatio=1"  
+        - name: SPRING_DATA_MONGODB_HOST
+          value: mongo
+        - name: ETHEREUM_NODE_URL
+          value: ws://34.69.22.82:4546
+        - name: BROADCASTER_TYPE
+          value: HTTP
+        - name: BROADCASTER_HTTP_CONTRACTEVENTSURL
+#          value: http://david19-consumer-service:80/eth/event
+          value: http://mongo-consumer-service:8081/event   
+        - name: BROADCASTER_HTTP_BLOCKEVENTSURL
+#          value: http://david19-consumer-service:80/eth/all-blocks
+          value: http://mongo-consumer-service:8081/block
+        - name: BROADCASTER_EVENT_CONFIRMATION_NUMBLOCKSTOWAIT
+          value: "1"
+#        - name: ZOOKEEPER_ADDRESS
+#          value: zookeeper:2181
+#        - name: KAFKA_ADDRESSES
+#          value: kafka:9092
+        - name: MAX_IDLE_CONNECTIONS
+          value: "20"
+        - name: POLLING_INTERVAL
+          value: "2000"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: david19-eventeum
+  name: david19-eventeum
+spec:
+  ports:
+    - port: 8060
+      targetPort: 8060
+  selector:
+    name: david19-eventeum

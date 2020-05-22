@@ -86,13 +86,15 @@ export default class CovidContract {
 	}
 
 	async setUserScore( { returnValues } ) {
-		const { subjectId, points } = returnValues;
+		const { subjectId, points, level } = returnValues;
 
 		let user = await this.dao.getUser( subjectId );
 		if( !user ) {
 			throw new Error( 'Invalid subjectId, user not found' );
 		}
 		user.points = parseInt( points );
+		user.level = parseInt( level );
+		user.histogram.push( points );
 		return user.save();
 	}
 

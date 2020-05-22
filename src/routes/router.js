@@ -63,7 +63,7 @@ export default class Router {
 				} );
 				if( this.handleMetrics )
 					this.metrics.incrementErrorCount( params[0].path );
-				params[1].sendError( error );
+				params[1].sendError( error + '' );
 			}
 		} );
 	}
