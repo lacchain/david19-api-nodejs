@@ -57,7 +57,7 @@ export default class Router {
 				this.logger.error( `${params[0].method} ${params[0].path}`, {
 					response: {
 						status: 500,
-						error: JSON.stringify( error )
+						error:  error + ''
 					},
 					request: JSON.stringify( params[0].body )
 				} );

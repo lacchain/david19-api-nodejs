@@ -44,7 +44,7 @@ export default class ConsumerRouter extends Router {
 				} ).catch( error => {
 					this.logger.error( 'CredentialRegistered', {
 						...eventValues,
-						error: JSON.stringify( error )
+						error: error + ''
 					} );
 					this.metrics.incrementErrorCount();
 				} );
@@ -57,7 +57,7 @@ export default class ConsumerRouter extends Router {
 				const eventValues = {
 					subjectId: indexedParameters[0].value,
 					points: nonIndexedParameters[1].value,
-					level: nonIndexedParameters[2].value,
+					level: nonIndexedParameters.length >= 3 ? nonIndexedParameters[2].value : null,
 				};
 				this.contract.setUserScore( {
 					returnValues: eventValues
@@ -66,7 +66,7 @@ export default class ConsumerRouter extends Router {
 				} ).catch( error => {
 					this.logger.error( 'PointsSet', {
 						...eventValues,
-						error: JSON.stringify( error )
+						error: error + ''
 					} );
 					this.metrics.incrementErrorCount();
 				} );

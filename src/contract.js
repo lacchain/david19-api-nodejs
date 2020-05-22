@@ -93,7 +93,8 @@ export default class CovidContract {
 			throw new Error( 'Invalid subjectId, user not found' );
 		}
 		user.points = parseInt( points );
-		user.level = parseInt( level );
+		if( level )
+			user.level = parseInt( level );
 		user.histogram.push( points );
 		return user.save();
 	}
