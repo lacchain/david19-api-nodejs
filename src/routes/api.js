@@ -83,8 +83,9 @@ export default class APIRouter extends Router {
 			};
 		} );
 
-		this.get( '/points/ranking', '1 minute', () => {
-			return this.dao.getPointsRanking();
+		this.get( '/points/ranking', '1 minute', async() => {
+			const results = await this.dao.getPointsRanking();
+			return results.slice( 0, 100 )
 		} );
 
 	}

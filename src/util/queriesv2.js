@@ -559,8 +559,6 @@ export const getPointsRanking = () => {
 		}
 	}, {
 		$sort: { points: -1 }
-	}, {
-		$limit: 100
 	}]
 }
 
