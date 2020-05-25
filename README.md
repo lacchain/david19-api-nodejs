@@ -1,7 +1,3 @@
-# david19-api-nodejs
-
-API for DAVID19's map provided by LACChain.
-
 ## Map
 1. Embed map into iframe
     
@@ -17,6 +13,19 @@ API for DAVID19's map provided by LACChain.
     Example:
     
     ``<iframe src="https://map.lacchain.net?lat=12&lon=-100&zoom=5&lang=en" width="100%" height="100%"/>``
+  
+2. Embed user stats into an iframe
+  
+  Endpoint: https://map.lacchain.net/ranking?tab=2&user_id=:user_id
+  
+  Query Params:
+  
+  - user_id: User unique identifier in blockchain
+  - lang: Language of map (es,en,pt)
+  
+  Example:
+  
+  ``<iframe src="https://map.lacchain.net/ranking?tab=2&user_id=user_id&lang=en" width="100%" height="100%"/>``
     
 ## API
 
@@ -260,6 +269,42 @@ API for DAVID19's map provided by LACChain.
     ```json
     {
     	"points": 40
+    }
+   
+8. **Get User Stats**
+
+    Gets the user stats ranking and level. The subject id parameter in URL represents the 
+    user unique identifier in blockchain. The method returns:
+     - Global position
+     - Country position
+     - State position
+     - World total users
+     - Country users 
+     - State total users
+     - User points
+     - Global median points
+     - User level
+    
+    Path: /points/user/:subjectId/stats
+    
+    Method: GET
+    
+    Response Example:
+    ```json
+    {
+    	"totalUsers": 166,
+    	"countryUsers": 7,
+    	"regionUsers": 6,
+    	"globalPosition": 7,
+    	"countryPosition": 0,
+    	"regionPosition": 0,
+    	"averagePoints": 7.954545454545454,
+    	"histogram": [
+    		15,
+    		20
+    	],
+    	"points": 20,
+    	"level": 0
     }
    
 ## Catalogs
