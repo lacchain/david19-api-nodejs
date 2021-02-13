@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: david19-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  tls:
+  - hosts:
+    - backend.lacchain.net
+    secretName: david19-prod-tls
+  rules:
+  - host: backend.lacchain.net
+    http:
+      paths:
+      - path: /
+        backend:
+#          serviceName: david19-backend-service
+          serviceName: mongo-backend-service
+          servicePort: 8080

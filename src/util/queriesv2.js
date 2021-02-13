@@ -535,6 +535,9 @@ export const getCountryPoints = () => {
 			_id: "$country",
 			points: {
 				$sum: "$points"
+			},
+			users: {
+				$sum: 1
 			}
 		}
 	}]
@@ -556,8 +559,6 @@ export const getPointsRanking = () => {
 		}
 	}, {
 		$sort: { points: -1 }
-	}, {
-		$limit: 100
 	}]
 }
 
@@ -633,6 +634,100 @@ export const getUserRankPositionCountry = ( country, subjectId ) => {
 		$project: {
 			_id: 0,
 			position: '$globalRank'
+		}
+	}]
+}
+
+export const getUserRankPositionRegion = ( country, region, subjectId ) => {
+	return [{
+		$match: {
+			"country": country,
+			"region": region
+		}
+	}, {
+		$project: {
+			_id: 1,
+			subjectId: "$subjectId",
+			points: 1
+		}
+	}, {
+		$sort: { points: -1 }
+	}, {
+		$group: {
+			_id: {},
+			arr: {
+				$push: {
+					subjectId: '$subjectId',
+					points: '$points'
+				}
+			}
+		}
+	}, {
+		$unwind: {
+			path: '$arr',
+			includeArrayIndex: 'globalRank',
+		}
+	}, {
+		$match: {
+			"arr.subjectId": subjectId
+		}
+	}, {
+		$project: {
+			_id: 0,
+			position: '$globalRank'
+		}
+	}]
+}
+
+export const getTotalUsers = () => {
+	return [{
+		$group: {
+			_id: null,
+			users: {
+				$sum: 1
+			}
+		}
+	}]
+}
+
+export const getCountryUsers = country => {
+	return [{
+		$match: {
+			country
+		}
+	}, {
+		$group: {
+			_id: null,
+			users: {
+				$sum: 1
+			}
+		}
+	}]
+}
+
+export const getRegionUsers = ( country, region ) => {
+	return [{
+		$match: {
+			country,
+			region
+		}
+	}, {
+		$group: {
+			_id: null,
+			users: {
+				$sum: 1
+			}
+		}
+	}]
+}
+
+export const getAveragePoints = () => {
+	return [{
+		$group: {
+			_id: null,
+			average: {
+				$avg: "$points"
+			}
 		}
 	}]
 }

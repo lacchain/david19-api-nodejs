@@ -3,13 +3,18 @@ import countryModel from "./model/country.js";
 import userModel from "./model/user.js";
 import {
 	getAgeRanges,
+	getAveragePoints,
 	getCountryPoints,
 	getCountryRank,
+	getCountryUsers,
 	getPipeline,
 	getPipeline2,
 	getPointsRanking,
+	getRegionUsers,
+	getTotalUsers,
 	getUserRankPosition,
-	getUserRankPositionCountry
+	getUserRankPositionCountry,
+	getUserRankPositionRegion
 } from "./util/queriesv2.js";
 
 export default class MongoDAO {
@@ -103,11 +108,31 @@ export default class MongoDAO {
 	}
 
 	getUserRankPosition( subjectId ) {
-		return this.models['user'].aggregate( getUserRankPosition( subjectId ) );
+		return this.models['user'].aggregate( getUserRankPosition( subjectId ) ).then( result => result.length > 0 ? result[0].position : 0 );
 	}
 
 	getUserRankPositionCountry( country, subjectId ) {
-		return this.models['user'].aggregate( getUserRankPositionCountry( country, subjectId ) );
+		return this.models['user'].aggregate( getUserRankPositionCountry( country, subjectId ) ).then( result => result.length > 0 ? result[0].position : 0 );
+	}
+
+	getUserRankPositionRegion( country, region, subjectId ) {
+		return this.models['user'].aggregate( getUserRankPositionRegion( country, region, subjectId ) ).then( result => result[0].position );
+	}
+
+	getTotalUsers() {
+		return this.models['user'].aggregate( getTotalUsers() ).then( result => result[0].users );
+	}
+
+	getCountryUsers( country ) {
+		return this.models['user'].aggregate( getCountryUsers( country ) ).then( result => result.length > 0 ? result[0].users : 0 );
+	}
+
+	getRegionUsers( country, region ) {
+		return this.models['user'].aggregate( getRegionUsers( country, region ) ).then( result => result.length > 0 ? result[0].users : 0 );
+	}
+
+	getAveragePoints() {
+		return this.models['user'].aggregate( getAveragePoints() ).then( result => result.length > 0 ? result[0].average : 0 );
 	}
 
 }

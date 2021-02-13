@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-backend-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mongo-backend-api
+  template:
+    metadata:
+      labels:
+        app: mongo-backend-api
+    spec:
+      containers:
+      - name: mongo-backend-api
+        image: gcr.io/lacchain-bid/mongo-api:v1
+        resources:
+          requests:
+            memory: 1024Mi
+            cpu: "1"
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: MONGODB_URL 
+          value: mongodb://mongo:27017/david19
+        - name: API_PORT 
+          value: "8080"
+        - name: API_METRICS_PORT 
+          value: "8082"
+        - name: ELASTIC_NODE_URL
+          value: https://af9d320d7f6b4034aa0e745027177116.us-east1.gcp.elastic-cloud.com:9243/
+        - name: ELASTIC_API_KEY
+          value: J5uroNDJV88RdtKDQE6sQL8z
+        - name: ELASTIC_API_INDEX
+          value: david19-api
+        - name: LOGGER_LEVEL
+          value: ERROR
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-backend-service
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: mongo-backend-api

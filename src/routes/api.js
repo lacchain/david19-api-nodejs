@@ -37,7 +37,36 @@ export default class APIRouter extends Router {
 			const { id } = req.params;
 			const user = await this.dao.getUser( id );
 			if( !user ) return { points: 0 };
-			return user.points;
+
+			return {
+				points: user.points || 0
+			};
+		} );
+
+		this.get( '/points/user/:id/stats', '1 minute', async req => {
+			const { id } = req.params;
+			const user = await this.dao.getUser( id );
+			if( !user ) throw new Error( "Invalid subjectId" )
+			const totalUsers = await this.dao.getTotalUsers();
+			const countryUsers = await this.dao.getCountryUsers( user.country );
+			const regionUsers = await this.dao.getRegionUsers( user.country, user.region );
+			const globalPosition = await this.dao.getUserRankPosition( id );
+			const countryPosition = await this.dao.getUserRankPositionCountry( user.country, id );
+			const regionPosition = await this.dao.getUserRankPositionRegion( user.country, user.region, id );
+			const averagePoints = await this.dao.getAveragePoints();
+
+			return {
+				totalUsers,
+				countryUsers,
+				regionUsers,
+				globalPosition,
+				countryPosition,
+				regionPosition,
+				averagePoints,
+				histogram: user.histogram || [],
+				points: user.points || 0,
+				level: user.level || 0
+			};
 		} );
 
 		this.get( '/points/user/:id/ranking', '1 minute', async req => {
@@ -49,13 +78,14 @@ export default class APIRouter extends Router {
 			const countryPosition = await this.dao.getUserRankPositionCountry( user.country, id );
 			return {
 				country: user.country,
-				globalPosition: globalPosition[0].position,
-				countryPosition: countryPosition[0].position
+				globalPosition,
+				countryPosition
 			};
 		} );
 
-		this.get( '/points/ranking', '1 minute', () => {
-			return this.dao.getPointsRanking();
+		this.get( '/points/ranking', '1 minute', async() => {
+			const results = await this.dao.getPointsRanking();
+			return results.slice( 0, 100 )
 		} );
 
 	}

@@ -31,5 +31,10 @@ export default {
 	points: {
 		type: Number,
 		default: 0
+	},
+	histogram: [Number],
+	level: {
+		type: Number,
+		default: 0
 	}
 }
